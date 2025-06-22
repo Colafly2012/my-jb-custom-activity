@@ -7,6 +7,7 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "dev": "concurrently \"npm start\" \"webpack --watch\"",
+    "debug": "concurrently \"node --inspect-brk -r esm app.js\" \"webpack --watch\"",
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "heroku-prebuild": "npm install --dev",
@@ -20,10 +21,10 @@
     "@babel/core": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "babel-loader": "^8.0.6",
-    "concurrently": "^5.1.0",
+    "concurrently": "^5.3.0",
     "copy-webpack-plugin": "^5.1.1",
-    "version-bump-prompt": "^6.0.3",
-    "webpack": "^4.41.5",
+    "version-bump-prompt": "^6.1.0",
+    "webpack": "^4.47.0",
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {

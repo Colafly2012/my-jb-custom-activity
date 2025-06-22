@@ -24,7 +24,7 @@ let activity = null;
 
 // Wait for the document to load before we doing anything
 document.addEventListener('DOMContentLoaded', function main() {
-
+    debugger;
     // Setup a test harness so we can interact with our custom activity
     // outside of journey builder using window functions & browser devtools.
     // This isn't required by your activity, its for example purposes only
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function main() {
 // this function is triggered by Journey Builder via Postmonger.
 // Journey Builder will send us a copy of the activity here
 function onInitActivity(payload) {
-
+    debugger;
     // set the activity object from this payload. We'll refer to this object as we
     // modify it before saving.
     activity = payload;
@@ -86,6 +86,11 @@ function onInitActivity(payload) {
 }
 
 function onDoneButtonClick() {
+    debugger;
+    if (!activity) {
+        alert('Activity is not initialized yet. Please wait and try again.');
+        return;
+    }
     // we set must metaData.isConfigured in order to tell JB that
     // this activity is ready for activation
     activity.metaData.isConfigured = true;
@@ -110,6 +115,7 @@ function onDoneButtonClick() {
 }
 
 function onCancelButtonClick() {
+    debugger;
     // tell Journey Builder that this activity has no changes.
     // we wont be prompted to save changes when the inspector closes
     connection.trigger('setActivityDirtyState', false);
