@@ -1,0 +1,48 @@
+# WEBPACK
+dist
+<<<<<<< HEAD
+modules/discount-code/dist
+modules/discount-redemption-split/dist
+
+# EXCLUDING
+.sfdx
+.vscode
+
+# NODE/NPM/GRUNT
+node_modules
+npm-debug.log
+.npm-debug.log
+
+# DOCKER
+temp-prod-dir/*
+/.operations/*
+!/.operations/*.tpl
+!/.operations/chart
+
+# CDN
+dist/cloudeditor-cdn.*
+
+# ECLIPSE/APTANA STUDIO
+.project
+
+# WEBSTORM
+.idea/
+*.iml
+
+# SUBLIME
+/*.sublime-project
+*.sublime-workspace
+
+# VIM
+*.sw?
+
+# MAC
+.DS_Store
+*.orig
+=======
+.idea/misc.xml
+.idea/modules.xml
+.idea/sfmc-example-custom-activity.iml
+.idea/vcs.xml
+.idea/workspace.xml
+>>>>>>> master
