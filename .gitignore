@@ -7,6 +7,7 @@ modules/discount-redemption-split/dist
 # EXCLUDING
 .sfdx
 .vscode
+*.bat
 
 # NODE/NPM/GRUNT
 node_modules

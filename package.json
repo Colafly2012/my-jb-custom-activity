@@ -7,7 +7,6 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "dev": "concurrently \"npm start\" \"webpack --watch\"",
-    "debug": "concurrently \"node --inspect-brk -r esm app.js\" \"webpack --watch\"",
     "build": "webpack --mode production",
     "build:dev": "webpack --mode development",
     "heroku-prebuild": "npm install --dev",
@@ -31,6 +30,7 @@
     "@salesforce-ux/design-system": "=2.8.1",
     "body-parser": "^1.19.0",
     "express": "4.16.3",
+    "jsonwebtoken": "^9.0.0",
     "postmonger": "0.0.16",
     "serve-static": "^1.12.3"
   }
