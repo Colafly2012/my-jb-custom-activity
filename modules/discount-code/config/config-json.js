@@ -38,6 +38,10 @@ module.exports = function configJSON(req) {
       }
     },
     configurationArguments: {
+      save: {
+        url: `https://${req.headers.host}/modules/discount-code/save`,
+        useJwt: true
+      },
       publish: {
         url: `https://${req.headers.host}/modules/discount-code/publish`,
         useJwt: true

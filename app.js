@@ -24,6 +24,7 @@ const SFMC_JWT_SECRET = process.env.SFMC_JWT_SECRET || 'your_sfmc_jwt_signing_se
 
 // JWT verification middleware
 function verifySFMCJwt(req, res, next) {
+    console.log("### req.headers:", req.headers);
     // JWT may be in header or body
     const token = req.headers['authorization']?.replace(/^Bearer\s+/i, '') || req.body?.jwt || req.query?.jwt;
     console.log("### req.headers['authorization']:", req.headers['authorization']);
