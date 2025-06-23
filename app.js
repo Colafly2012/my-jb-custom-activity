@@ -24,21 +24,6 @@ const SFMC_JWT_SECRET = process.env.SFMC_JWT_SECRET || 'your_sfmc_jwt_signing_se
 
 // JWT verification middleware
 function verifySFMCJwt(req, res, next) {
-    console.log('### SFMC_JWT_SECRET:', SFMC_JWT_SECRET);
-    const excludeUrls = [
-        '/modules/discount-code',
-        '/modules/discount-code/',
-        '/modules/discount-redemption-split',
-        '/modules/discount-redemption-split/'
-    ];
-    // Exclude page paths and all static resources (.html, .css, .js, .png, .jpg, .svg, .ico, .gif, .woff2, .woff, .ttf, .eot, etc.)
-    if (
-        excludeUrls.includes(req.originalUrl) ||
-        req.originalUrl.match(/^\/modules\/discount-code\/.*\.(html|css|js|png|jpg|jpeg|svg|ico|gif|woff2|woff|ttf|eot)$/i) ||
-        req.originalUrl.match(/^\/modules\/discount-redemption-split\/.*\.(html|css|js|png|jpg|jpeg|svg|ico|gif|woff2|woff|ttf|eot)$/i)
-    ) {
-        return next();
-    }
     // JWT may be in header or body
     const token = req.headers['authorization']?.replace(/^Bearer\s+/i, '') || req.body?.jwt || req.query?.jwt;
     if (!token) {
@@ -54,9 +39,18 @@ function verifySFMCJwt(req, res, next) {
     });
 }
 
-// Only protect API endpoints (all discount-code and discount-redemption-split subpaths)
-app.use('/modules/discount-code', verifySFMCJwt);
-app.use('/modules/discount-redemption-split', verifySFMCJwt);
+// Only protect specific API endpoints
+app.use('/modules/discount-code/execute', verifySFMCJwt);
+app.use('/modules/discount-code/save', verifySFMCJwt);
+app.use('/modules/discount-code/publish', verifySFMCJwt);
+app.use('/modules/discount-code/validate', verifySFMCJwt);
+app.use('/modules/discount-code/stop', verifySFMCJwt);
+
+app.use('/modules/discount-redemption-split/execute', verifySFMCJwt);
+app.use('/modules/discount-redemption-split/save', verifySFMCJwt);
+app.use('/modules/discount-redemption-split/publish', verifySFMCJwt);
+app.use('/modules/discount-redemption-split/validate', verifySFMCJwt);
+app.use('/modules/discount-redemption-split/stop', verifySFMCJwt);
 
 // Must register submodules after middleware
 submodules.forEach((sm) => sm(app, {
