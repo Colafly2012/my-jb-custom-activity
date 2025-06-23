@@ -66,6 +66,7 @@ function verifySFMCJwt(req, res, next) {
         }
         // You can further validate issuer, audience, etc. from decoded
         req.sfmcJwt = decoded;
+        console.log("### JWT verification success!");
         next();
     });
 }
