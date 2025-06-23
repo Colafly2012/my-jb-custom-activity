@@ -10,6 +10,19 @@ const submodules = [
 
 const app = express();
 
+// Add this before app.use(bodyParser.json())
+app.use('/modules/discount-code/validate', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-code/execute', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-code/save', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-code/publish', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-code/stop', bodyParser.text({ type: 'application/jwt' }));
+
+app.use('/modules/discount-redemption-split/execute', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-redemption-split/save', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-redemption-split/publish', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-redemption-split/validate', bodyParser.text({ type: 'application/jwt' }));
+app.use('/modules/discount-redemption-split/stop', bodyParser.text({ type: 'application/jwt' }));
+
 // parse application/json
 app.use(bodyParser.json())
 
