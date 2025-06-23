@@ -1,5 +1,5 @@
 // JOURNEY BUILDER CUSTOM ACTIVITY - discount-code ACTIVITY
-// ````````````````````````````````````````````````````````````
+// =========================================================
 // SERVER SIDE IMPLEMENTATION
 //
 // This example demonstrates
@@ -29,8 +29,8 @@ module.exports = function discountCodeExample(app, options) {
 
     // setup index.html route
     app.get('/modules/discount-code/index.html', function(req, res) {
-        // you can use your favorite templating library to generate your html file.
-        // this example keeps things simple and just returns a static file
+        // You can use your favorite templating library to generate your html file.
+        // This example keeps things simple and just returns a static file
         return res.sendFile(`${moduleDirectory}/html/index.html`);
     });
 
@@ -41,18 +41,18 @@ module.exports = function discountCodeExample(app, options) {
         return res.status(200).json(configJSON(req));
     });
 
-    // ```````````````````````````````````````````````````````
+    // =========================================================
     // BEGIN JOURNEY BUILDER LIFECYCLE EVENTS
     //
     // CONFIGURATION
-    // ```````````````````````````````````````````````````````
+    // =========================================================
     // Reference:
     // https://developer.salesforce.com/docs/atlas.en-us.mc-apis.meta/mc-apis/interaction-operating-states.htm
 
     /**
      * Called when a journey is saving the activity.
      * @return {[type]}     [description]
-     * 200 - Return a 200 iff the configuraiton is valid.
+     * 200 - Return a 200 iff the configuration is valid.
      * 30x - Return if the configuration is invalid (this will block the publish phase)
      * 40x - Return if the configuration is invalid (this will block the publish phase)
      * 50x - Return if the configuration is invalid (this will block the publish phase)
@@ -64,10 +64,10 @@ module.exports = function discountCodeExample(app, options) {
 
     /**
      * Called when a Journey has been published.
-     * This is when a journey is being activiated and eligible for contacts
+     * This is when a journey is being activated and eligible for contacts
      * to be processed.
      * @return {[type]}     [description]
-     * 200 - Return a 200 iff the configuraiton is valid.
+     * 200 - Return a 200 iff the configuration is valid.
      * 30x - Return if the configuration is invalid (this will block the publish phase)
      * 40x - Return if the configuration is invalid (this will block the publish phase)
      * 50x - Return if the configuration is invalid (this will block the publish phase)
@@ -81,7 +81,7 @@ module.exports = function discountCodeExample(app, options) {
      * Called when Journey Builder wants you to validate the configuration
      * to ensure the configuration is valid.
      * @return {[type]}
-     * 200 - Return a 200 iff the configuraiton is valid.
+     * 200 - Return a 200 iff the configuration is valid.
      * 30x - Return if the configuration is invalid (this will block the publish phase)
      * 40x - Return if the configuration is invalid (this will block the publish phase)
      * 50x - Return if the configuration is invalid (this will block the publish phase)
@@ -92,11 +92,11 @@ module.exports = function discountCodeExample(app, options) {
     });
 
 
-    // ```````````````````````````````````````````````````````
+    // =========================================================
     // BEGIN JOURNEY BUILDER LIFECYCLE EVENTS
     //
     // EXECUTING JOURNEY
-    // ```````````````````````````````````````````````````````
+    // =========================================================
 
     /**
      * Called when a Journey is stopped.
