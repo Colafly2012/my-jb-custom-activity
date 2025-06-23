@@ -26,6 +26,10 @@ const SFMC_JWT_SECRET = process.env.SFMC_JWT_SECRET || 'your_sfmc_jwt_signing_se
 function verifySFMCJwt(req, res, next) {
     // JWT may be in header or body
     const token = req.headers['authorization']?.replace(/^Bearer\s+/i, '') || req.body?.jwt || req.query?.jwt;
+    console.log("### req.headers['authorization']:", req.headers['authorization']);
+    console.log("### req.query:", req.query);
+    console.log("### req.body:", req.body);
+    console.log("### JWT token received:", token);
     if (!token) {
         return res.status(401).json({ error: 'Missing JWT token' });
     }

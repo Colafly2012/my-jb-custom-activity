@@ -33,18 +33,22 @@ module.exports = function configJSON(req) {
         // wait in ms between retry.
         retryDelay: 1000,
         // The number of concurrent requests Journey Builder will send all together
-        concurrentRequests: 5
+        concurrentRequests: 5,
+        useJwt: true
       }
     },
     configurationArguments: {
       publish: {
-        url: `https://${req.headers.host}/modules/discount-code/publish`
+        url: `https://${req.headers.host}/modules/discount-code/publish`,
+        useJwt: true
       },
       validate: {
-        url: `https://${req.headers.host}/modules/discount-code/validate`
+        url: `https://${req.headers.host}/modules/discount-code/validate`,
+        useJwt: true
       },
       stop: {
-        url: `https://${req.headers.host}/modules/discount-code/stop`
+        url: `https://${req.headers.host}/modules/discount-code/stop`,
+        useJwt: true
       }
     },
     userInterfaces: {
