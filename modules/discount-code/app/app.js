@@ -116,13 +116,14 @@ module.exports = function discountCodeExample(app, options) {
      * 5xx - Contact is ejected from the Journey.
      */
     app.post('/modules/discount-code/execute', function(req, res) {
-        console.log('### debug: /modules/discount-code/execute');
+        console.log('debug: /modules/discount-code/execute');
 
-        // If JWT is used, decoded JWT is attached to req.sfmcJwt
+        // Prefer JWT payload if present, fallback to req.body
         const request = req.sfmcJwt || req.body;
 
-        console.log("### request payload", JSON.stringify(request));
+        console.log("request payload", JSON.stringify(request));
 
+        // Find the in argument
         function getInArgument(k) {
             if (request && request.inArguments) {
                 for (let i = 0; i < request.inArguments.length; i++) {
