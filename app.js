@@ -24,6 +24,7 @@ const SFMC_JWT_SECRET = process.env.SFMC_JWT_SECRET || 'your_sfmc_jwt_signing_se
 
 // JWT verification middleware
 function verifySFMCJwt(req, res, next) {
+    console.log('### SFMC_JWT_SECRET:', SFMC_JWT_SECRET);
     const excludeUrls = [
         '/modules/discount-code',
         '/modules/discount-code/',
