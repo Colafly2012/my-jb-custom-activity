@@ -10,7 +10,7 @@ module.exports = function configJSON(req) {
     type: 'REST',
     lang: {
       'en-US': {
-        name: 'Discount Code',
+        name: 'JWT-Discount Code',
         description: 'Issue a discount code to contact them to entice them to buy something.'
       }
     },

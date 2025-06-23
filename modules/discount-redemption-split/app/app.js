@@ -127,7 +127,7 @@ module.exports = function splitExample(app, options) {
         // example: https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-app-development.meta/mc-app-development/example-rest-activity.htm
         let discountCode = getInArgument('discountCode') || 'nothing';
 
-      console.log('discount code:', discountCode);
+      console.log('JWT-discount code:', discountCode);
 
       if(discountCode && discountCode.length > 0) {
           switch (discountCode[0]) {
