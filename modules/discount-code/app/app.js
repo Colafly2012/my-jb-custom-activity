@@ -116,13 +116,13 @@ module.exports = function discountCodeExample(app, options) {
      * 5xx - Contact is ejected from the Journey.
      */
     app.post('/modules/discount-code/execute', function(req, res) {
-        console.log('debug: /modules/discount-code/execute');
+        console.log('### debug: /modules/discount-code/execute');
 
-        const request = req.body;
+        // If JWT is used, decoded JWT is attached to req.sfmcJwt
+        const request = req.sfmcJwt || req.body;
 
-        console.log(" req.body", JSON.stringify(req.body));
+        console.log("### request payload", JSON.stringify(request));
 
-        // Find the in argument
         function getInArgument(k) {
             if (request && request.inArguments) {
                 for (let i = 0; i < request.inArguments.length; i++) {
@@ -156,7 +156,6 @@ module.exports = function discountCodeExample(app, options) {
             return toReturn + "-" + Math.round(Math.random() * 99999, 0);
         }
 
-        // example: https://developer.salesforce.com/docs/atlas.en-us.noversion.mc-app-development.meta/mc-app-development/example-rest-activity.htm
         const discountInArgument = getInArgument('discount') || 'nothing';
         const responseObject = {
             discount: discountInArgument,
@@ -168,4 +167,5 @@ module.exports = function discountCodeExample(app, options) {
         return res.status(200).json(responseObject);
     });
 
+};
 };
