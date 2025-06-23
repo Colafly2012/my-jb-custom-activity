@@ -88,7 +88,7 @@ function onInitActivity(payload) {
 function onDoneButtonClick() {
     debugger;
     if (!activity) {
-        alert('Activity is not initialized yet. Please wait and try again.');
+        alert('Activity is not initialized yet. Please wait and try again.If you are in a Local environment, please first execute `jb.ready()` in the console, and then click the DONE button.');
         return;
     }
     // we set must metaData.isConfigured in order to tell JB that
