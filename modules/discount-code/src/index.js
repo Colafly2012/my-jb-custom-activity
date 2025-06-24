@@ -50,7 +50,6 @@ function onInitActivity(payload) {
     // set the activity object from this payload. We'll refer to this object as we
     // modify it before saving.
     activity = payload;
-    console.log('###### onInitActivity -> activity:', activity);
 
     const hasInArguments = Boolean(
         activity.arguments &&
