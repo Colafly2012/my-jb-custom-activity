@@ -59,12 +59,14 @@ function verifySFMCJwt(req, res, next) {
         console.log("### Missing JWT token");
         return res.status(401).json({ error: 'Missing JWT token' });
     }
+    
     jwt.verify(token, SFMC_JWT_SECRET, { algorithms: ['HS256'] }, (err, decoded) => {
         if (err) {
             console.error("### JWT verification failed:", err);
             return res.status(401).json({ error: 'Invalid JWT token' });
         }
         // You can further validate issuer, audience, etc. from decoded
+        console.log("### decoded:", decoded);
         req.sfmcJwt = decoded;
         console.log("### JWT verification success!");
         next();
