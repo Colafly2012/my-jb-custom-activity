@@ -169,4 +169,3 @@ module.exports = function discountCodeExample(app, options) {
     });
 
 };
-};
