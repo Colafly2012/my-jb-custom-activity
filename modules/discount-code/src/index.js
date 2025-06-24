@@ -101,7 +101,7 @@ function onDoneButtonClick() {
     }];
 
     // you can set the name that appears below the activity with the name property
-    activity.name = `Issue ${activity.arguments.execute.inArguments[0].discount}% Code`;
+    activity.name = `JWT-Issue ${activity.arguments.execute.inArguments[0].discount}% Code`;
 
     console.log('------------ triggering:updateActivity({obj}) ----------------');
     console.log('Sending message back to updateActivity');
