@@ -65,9 +65,13 @@ function verifySFMCJwt(req, res, next) {
             console.error("### JWT verification failed:", err);
             return res.status(401).json({ error: 'Invalid JWT token' });
         }
-        // You can further validate issuer, audience, etc. from decoded
-        console.log("### decoded:", decoded);
-        req.sfmcJwt = decoded;
+        // Only assign if decoded has content
+        if (decoded && Object.keys(decoded).length > 0) {
+            req.reqPayload = decoded;
+            console.log("### Request Payload from JB:", req.reqPayload);
+        } else {
+            console.warn("### Decoded JWT is empty, req.reqPayload not set.");
+        }
         console.log("### JWT verification success!");
         next();
     });

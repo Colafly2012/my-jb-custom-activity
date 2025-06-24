@@ -119,11 +119,10 @@ module.exports = function discountCodeExample(app, options) {
         console.log('debug: /modules/discount-code/execute');
 
         // Prefer JWT payload if present, fallback to req.body
-        console.log("### req.sfmcJwt:", req.sfmcJwt);
         console.log("### req.body:", req.body);
-        const request = req.sfmcJwt || req.body;
+        const request = req.reqPayload || req.body;
 
-        console.log("### request payload:", JSON.stringify(request));
+        console.log("request payload", JSON.stringify(request));
 
         // Find the in argument
         function getInArgument(k) {
