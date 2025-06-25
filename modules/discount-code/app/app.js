@@ -13,6 +13,7 @@
 
 const express = require('express');
 const configJSON = require('../config/config-json');
+const axios = require('axios'); // 新增
 
 // setup the discount-code example app
 module.exports = function discountCodeExample(app, options) {
@@ -164,9 +165,44 @@ module.exports = function discountCodeExample(app, options) {
             discountCode: generateRandomCode() + `-${discountInArgument}%`
         };
 
-        console.log('Response Object', JSON.stringify(responseObject));
+        // 1. 立即返回response给外部系统A
+        console.log('###### responseObject:', responseObject);
+        res.status(200).json(responseObject);
 
-        return res.status(200).json(responseObject);
+        // 2. 异步调用外部系统B，不等待其响应
+        axios.post(
+            'http://sfmc-jb-my-custom-activity.onrender.com/push-mobile/v2/push?appName=XXXXXMobile',
+            {
+                title: "Test Native Page to App page",
+                message: "Test content",
+                priority: "normal",
+                timeToLive: 0,
+                data: {
+                    _od: "https://xxx.test-app.link/xxxxxxxx",
+                    _mt: "1",
+                    _sid: "SFMC",
+                    _m: "xxxxxxxxxxx",
+                    _r: "8904cc7a-xxxx-xxxx-ac3f-5880c57e890b",
+                    alert: "Test MC push to Native Page to App page",
+                    title: "Test"
+                },
+                topic: "",
+                deviceIds: [
+                    "local-run-device-id-001",
+                    "local-run-device-id-001"
+                ]
+            },
+            {
+                headers: {
+                    'apiKey': 'XXXXX540193d99e1c248a2fe2fca4bd1',
+                    'Content-Type': 'application/json'
+                }
+            }
+        ).then(pushResp => {
+            console.log('###### MobilePush API response:', pushResp.data);
+        }).catch(err => {
+            console.error('###### MobilePush API error:', err && err.response ? err.response.data : err.message);
+        });
     });
 
 };
