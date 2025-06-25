@@ -188,8 +188,8 @@ module.exports = function discountCodeExample(app, options) {
                 },
                 topic: "",
                 deviceIds: [
-                    "local-run-device-id-001",
-                    "local-run-device-id-001"
+                    "jwc-webservice-device-id-001",
+                    "jwc-webservice-device-id-002"
                 ]
             },
             {
