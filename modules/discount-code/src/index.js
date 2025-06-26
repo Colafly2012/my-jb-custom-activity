@@ -71,7 +71,7 @@ function onInitActivity(payload) {
     // (take a look at execute() in ./discountCode/app.js to see where that happens)
     const discountArgument = inArguments.find((arg) => arg.discount);
 
-    console.log('Discount Argument', discountArgument);
+    console.log('### onInitActivity => Discount Argument', discountArgument);
 
     // if a discountCode back argument was set, show the message in the view.
     if (discountArgument) {
@@ -81,6 +81,25 @@ function onInitActivity(payload) {
     // if the discountCode back argument doesn't exist the user can pick
     // a discountCode message from the drop down list. the discountCode back arg
     // will be set once the journey executes the activity
+
+    // Using Entry Source Data in Journey Builder Custom Activities
+    connection.trigger('requestSchema');
+    connection.on('requestedSchema', function (data) {
+
+        // add entry source attributes as inArgs
+        const schema = data['schema'];
+
+        for (var i = 0, l = schema.length; i < l; i++) {
+            var inArg = {};
+            let attr = schema[i].key;
+            let keyIndex = attr.lastIndexOf('.') + 1;
+            inArg[attr.substring(keyIndex)] = '{{' + attr + '}}';
+            activity['arguments'].execute.inArguments.push(inArg);
+        }
+    });
+
+    let argArr = activity['arguments'].execute.inArguments;
+    console.log('### onInitActivity => argArr', argArr);
 }
 
 function onDoneButtonClick() {
@@ -209,6 +228,27 @@ function setupExampleTestHarness() {
                 definitionInstanceId: "{{Context.DefinitionInstanceId}}",
                 requestObjectId: "{{Context.RequestObjectId}}"
             }
+        });
+
+        // 模拟 Journey Builder 返回 requestedSchema 事件
+        jbSession.trigger('requestedSchema', {
+            schema: [
+                {
+                    "key":"Event.APIEvent-1a11c19c-7952-488a-99d7-069fa2bc543c.Id",
+                    "type":"Text",
+                    "length":18
+                },
+                {
+                    "key":"Event.APIEvent-1a11c19c-7952-488a-99d7-069fa2bc543c.FirstName",
+                    "type":"Text",
+                    "length":40
+                },
+                {
+                    "key":"Event.APIEvent-1a11c19c-7952-488a-99d7-069fa2bc543c.LastName",
+                    "type":"Text",
+                    "length":80
+                }
+            ]
         });
     };
 }

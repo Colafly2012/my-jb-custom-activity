@@ -39,6 +39,7 @@ module.exports = function discountCodeExample(app, options) {
     app.get('/modules/discount-code/config.json', function(req, res) {
         // Journey Builder looks for config.json when the canvas loads.
         // We'll dynamically generate the config object with a function
+        console.log('###### debug: /modules/discount-code/config.json');
         return res.status(200).json(configJSON(req));
     });
 
