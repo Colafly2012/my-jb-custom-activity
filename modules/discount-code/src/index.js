@@ -85,21 +85,24 @@ function onInitActivity(payload) {
     // Using Entry Source Data in Journey Builder Custom Activities
     connection.trigger('requestSchema');
     connection.on('requestedSchema', function (data) {
-
         // add entry source attributes as inArgs
         const schema = data['schema'];
 
+        const entry_fields_select = document.getElementById('entryField');
         for (var i = 0, l = schema.length; i < l; i++) {
-            var inArg = {};
             let attr = schema[i].key;
-            let keyIndex = attr.lastIndexOf('.') + 1;
-            inArg[attr.substring(keyIndex)] = '{{' + attr + '}}';
-            activity['arguments'].execute.inArguments.push(inArg);
+            // 取最后一个.后面的字符串作为label
+            let lastDotIdx = attr.lastIndexOf('.');
+            let label = lastDotIdx !== -1 ? attr.substring(lastDotIdx + 1) : attr;
+
+            let option = document.createElement('option');
+            option.id = attr;
+            option.value = attr;
+            option.text = label;
+            entry_fields_select.appendChild(option);
         }
     });
 
-    let argArr = activity['arguments'].execute.inArguments;
-    console.log('### onInitActivity => argArr', argArr);
 }
 
 function onDoneButtonClick() {
@@ -115,9 +118,24 @@ function onDoneButtonClick() {
     const select = document.getElementById('discount-code');
     const option = select.options[select.selectedIndex];
 
-    activity.arguments.execute.inArguments = [{
-        discount: option.value,
-    }];
+    // 获取 entry_fields_select 下拉框的选中项
+    const entry_fields_select = document.getElementById('entryField');
+    const entry_fields_option = entry_fields_select.options[entry_fields_select.selectedIndex];
+    const idKey = entry_fields_option ? entry_fields_option.value : null;
+
+    // 构建inArguments
+    const inArgs = [];
+    if (option) {
+        inArgs.push({ discount: option.value });
+    }
+    if (idKey) {
+        // 转为{{key}}格式
+        const idArg = {};
+        idArg[idKey.substring(idKey.lastIndexOf('.') + 1)] = `{{${idKey}}}`;
+        inArgs.push(idArg);
+    }
+
+    activity.arguments.execute.inArguments = inArgs;
 
     // you can set the name that appears below the activity with the name property
     activity.name = `JWT-Issue ${activity.arguments.execute.inArguments[0].discount}% Code`;
