@@ -70,9 +70,10 @@ function onInitActivity(payload) {
     // this would be set on the server side when the activity executes
     // (take a look at execute() in ./discountCode/app.js to see where that happens)
     const discountArgument = inArguments.find((arg) => arg.discount);
+    const testValueArgument = inArguments.find((arg) => arg.test_value);
 
     console.log('### onInitActivity => Discount Argument', discountArgument);
-
+    console.log('### onInitActivity => Test_Value Argument', testValueArgument);
     // if a discountCode back argument was set, show the message in the view.
     if (discountArgument) {
         selectDiscountCodeOption(discountArgument.discount);
@@ -95,22 +96,30 @@ function onInitActivity(payload) {
         // Populate the entry fields select dropdown with the schema
         // We will use the key as the value, and the last part of the key as the label
         // e.g. "Event.APIEvent-1a11c19c-7952-488a-99d7-069fa2bc543c.FirstName" -> "FirstName"
-        const entry_fields_select = document.getElementById('entryField');
+        const entry_fields_select = document.getElementById('test-value');
+        entry_fields_select.innerHTML = '';
         for (var i = 0, l = schema.length; i < l; i++) {
             let attr = schema[i].key;
-            // 取最后一个.后面的字符串作为label
             let lastDotIdx = attr.lastIndexOf('.');
             let label = lastDotIdx !== -1 ? attr.substring(lastDotIdx + 1) : attr;
 
             let option = document.createElement('option');
             option.id = attr;
-            // 只保留原始key，不加花括号
-            option.value = attr;
+            // 这里直接加上 {{ }}，value 形如 {{Event.APIEvent-xxx.FirstName}}
+            option.value = `{{${attr}}}`;
             option.text = label;
             entry_fields_select.appendChild(option);
         }
         console.log('###### entry_fields_select:', entry_fields_select);
         console.log('###### schema:', schema);
+        console.log('###### testValueArgument:', testValueArgument);
+
+        if(testValueArgument) {
+            // 这里的 test_value 是一个特殊的测试用例参数，主要用于在本地环境中测试
+            // 你可以在 config-json.js 中设置默认值为 null，然后在本地环境中通过 console 修改它
+            // 例如：window.jb.testValue = 'test_value';
+            selectEntrySourceOption(testValueArgument.test_value);
+        }
     });
 
 }
@@ -129,9 +138,9 @@ function onDoneButtonClick() {
     const option = select.options[select.selectedIndex];
 
     // 获取 entry_fields_select 下拉框的选中项
-    const entry_fields_select = document.getElementById('entryField');
+    const entry_fields_select = document.getElementById('test-value');
     const entry_fields_option = entry_fields_select.options[entry_fields_select.selectedIndex];
-    // 这里 optionKey 只会是原始key，不包含花括号
+    // 这里 optionKey 已经带有 {{ }}，无需再拼接
     const optionKey = entry_fields_option ? entry_fields_option.value : null;
 
     // 构建inArguments
@@ -140,9 +149,9 @@ function onDoneButtonClick() {
         inArgs.push({ discount: option.value });
     }
     if (optionKey) {
-        // 在这里才加花括号
         const keyArg = {};
-        keyArg[optionKey.substring(optionKey.lastIndexOf('.') + 1)] = `{{${optionKey}}}`;
+        //keyArg[optionKey.substring(optionKey.lastIndexOf('.') + 1)] = `{{${optionKey}}}`;
+        keyArg["test_value"] = optionKey;
         inArgs.push(keyArg);
     }
 
@@ -182,6 +191,14 @@ function onDiscountCodeSelectChange() {
     connection.trigger('setActivityDirtyState', true);
 }
 
+function onEntrySourceSelectChange() {
+    // enable or disable the done button when the select option changes
+    const select = document.getElementById('test-value');
+
+    // let journey builder know the activity has changes
+    connection.trigger('setActivityDirtyState', true);
+}
+
 function selectDiscountCodeOption(value) {
     const select = document.getElementById('discount-code');
     const selectOption = select.querySelector(`[value='${value}']`);
@@ -190,7 +207,19 @@ function selectDiscountCodeOption(value) {
         selectOption.selected = true;
         onDiscountCodeSelectChange();
     } else {
-        console.log('Could not select value from list', `[value='${value}]'`);
+        console.log('###### Discount Code: Could not select value from list', `[value='${value}]'`);
+    }
+}
+
+function selectEntrySourceOption(value) {
+    const select = document.getElementById('test-value');
+    const selectOption = select.querySelector(`[value='${value}']`);
+
+    if (selectOption) {
+        selectOption.selected = true;
+        onEntrySourceSelectChange();
+    } else {
+        console.log('###### Entry Source Field: Could not select value from list', `[value='${value}]'`);
     }
 }
 
@@ -199,8 +228,11 @@ function setupEventHandlers() {
     document.getElementById('done').addEventListener('click', onDoneButtonClick);
     document.getElementById('cancel').addEventListener('click', onCancelButtonClick);
     document.getElementById('discount-code').addEventListener('change', onDiscountCodeSelectChange);
+    document.getElementById('test-value').addEventListener('change', onEntrySourceSelectChange);
 }
 
+
+// [Simulate JB Response during testing in local environment]
 // this function is for example purposes only. it sets ups a Postmonger
 // session that emulates how Journey Builder works. You can call jb.ready()
 // from the console to kick off the initActivity event with a mock activity object
@@ -217,19 +249,19 @@ function setupExampleTestHarness() {
     window.jb = jb;
 
     jbSession.on('setActivityDirtyState', function(value) {
-        console.log('[echo] setActivityDirtyState -> ', value);
+        console.log('[echo][Simulate JB Response] setActivityDirtyState -> ', value);
     });
 
     jbSession.on('requestInspectorClose', function() {
-        console.log('[echo] requestInspectorClose');
+        console.log('[echo][Simulate JB Response] requestInspectorClose');
     });
 
     jbSession.on('updateActivity', function(activity) {
-        console.log('[echo] updateActivity -> ', JSON.stringify(activity, null, 4));
+        console.log('[echo][Simulate JB Response] updateActivity -> ', JSON.stringify(activity, null, 4));
     });
 
     jbSession.on('ready', function() {
-        console.log('[echo] ready');
+        console.log('[echo][Simulate JB Response] ready');
         console.log('\tuse jb.ready() from the console to initialize your activity')
     });
 
@@ -249,6 +281,9 @@ function setupExampleTestHarness() {
                     inArguments: [
                         {
                             discount: 10
+                        },
+                        {
+                            test_value: "{{Event.APIEvent-1a11c19c-7952-488a-99d7-069fa2bc543c.FirstName}}"
                         }
                     ],
                     outArguments: []

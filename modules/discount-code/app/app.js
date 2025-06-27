@@ -121,7 +121,7 @@ module.exports = function discountCodeExample(app, options) {
         console.log('debug: /modules/discount-code/execute');
 
         // Prefer JWT payload if present, fallback to req.body
-        console.log("### req.body:", req.body);
+        console.log("###### req.body:", req.body);
         const request = req.reqPayload || req.body;
 
         console.log("request payload", JSON.stringify(request));
