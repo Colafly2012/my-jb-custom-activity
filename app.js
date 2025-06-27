@@ -17,11 +17,11 @@ app.use('/modules/discount-code/save', bodyParser.text({ type: 'application/jwt'
 app.use('/modules/discount-code/publish', bodyParser.text({ type: 'application/jwt' }));
 app.use('/modules/discount-code/stop', bodyParser.text({ type: 'application/jwt' }));
 
-app.use('/modules/discount-redemption-split/execute', bodyParser.text({ type: 'application/jwt' }));
-app.use('/modules/discount-redemption-split/save', bodyParser.text({ type: 'application/jwt' }));
-app.use('/modules/discount-redemption-split/publish', bodyParser.text({ type: 'application/jwt' }));
-app.use('/modules/discount-redemption-split/validate', bodyParser.text({ type: 'application/jwt' }));
-app.use('/modules/discount-redemption-split/stop', bodyParser.text({ type: 'application/jwt' }));
+// app.use('/modules/discount-redemption-split/execute', bodyParser.text({ type: 'application/jwt' }));
+// app.use('/modules/discount-redemption-split/save', bodyParser.text({ type: 'application/jwt' }));
+// app.use('/modules/discount-redemption-split/publish', bodyParser.text({ type: 'application/jwt' }));
+// app.use('/modules/discount-redemption-split/validate', bodyParser.text({ type: 'application/jwt' }));
+// app.use('/modules/discount-redemption-split/stop', bodyParser.text({ type: 'application/jwt' }));
 
 // parse application/json
 app.use(bodyParser.json())
@@ -53,26 +53,26 @@ function verifySFMCJwt(req, res, next) {
         token = req.body;
     }
 
-    console.log("### JWT token received:", token);
+    console.log("###### JWT token received:", token);
 
     if (!token) {
-        console.log("### Missing JWT token");
+        console.log("###### Missing JWT token");
         return res.status(401).json({ error: 'Missing JWT token' });
     }
     
     jwt.verify(token, SFMC_JWT_SECRET, { algorithms: ['HS256'] }, (err, decoded) => {
         if (err) {
-            console.error("### JWT verification failed:", err);
+            console.error("###### JWT verification failed:", err);
             return res.status(401).json({ error: 'Invalid JWT token' });
         }
         // Only assign if decoded has content
         if (decoded && Object.keys(decoded).length > 0) {
             req.reqPayload = decoded;
-            console.log("### Request Payload from JB:", req.reqPayload);
+            console.log("###### jwt.verify => Request Payload from JB:", req.reqPayload);
         } else {
-            console.warn("### Decoded JWT is empty, req.reqPayload not set.");
+            console.warn("###### jwt.verify => Decoded JWT is empty, req.reqPayload not set.");
         }
-        console.log("### JWT verification success!");
+        console.log("###### JWT verification success!");
         next();
     });
 }
@@ -84,11 +84,11 @@ app.use('/modules/discount-code/publish', verifySFMCJwt);
 app.use('/modules/discount-code/validate', verifySFMCJwt);
 app.use('/modules/discount-code/stop', verifySFMCJwt);
 
-app.use('/modules/discount-redemption-split/execute', verifySFMCJwt);
-app.use('/modules/discount-redemption-split/save', verifySFMCJwt);
-app.use('/modules/discount-redemption-split/publish', verifySFMCJwt);
-app.use('/modules/discount-redemption-split/validate', verifySFMCJwt);
-app.use('/modules/discount-redemption-split/stop', verifySFMCJwt);
+// app.use('/modules/discount-redemption-split/execute', verifySFMCJwt);
+// app.use('/modules/discount-redemption-split/save', verifySFMCJwt);
+// app.use('/modules/discount-redemption-split/publish', verifySFMCJwt);
+// app.use('/modules/discount-redemption-split/validate', verifySFMCJwt);
+// app.use('/modules/discount-redemption-split/stop', verifySFMCJwt);
 
 // Must register submodules after middleware
 submodules.forEach((sm) => sm(app, {

@@ -85,9 +85,16 @@ function onInitActivity(payload) {
     // Using Entry Source Data in Journey Builder Custom Activities
     connection.trigger('requestSchema');
     connection.on('requestedSchema', function (data) {
+        debugger;
         // add entry source attributes as inArgs
+        console.log('-------- triggered:requestedSchema({obj}) --------');
+        console.log('###### BEFORE data:\n ', JSON.stringify(data, null, 4));
+        console.log('-------------------------------------------------');
         const schema = data['schema'];
 
+        // Populate the entry fields select dropdown with the schema
+        // We will use the key as the value, and the last part of the key as the label
+        // e.g. "Event.APIEvent-1a11c19c-7952-488a-99d7-069fa2bc543c.FirstName" -> "FirstName"
         const entry_fields_select = document.getElementById('entryField');
         for (var i = 0, l = schema.length; i < l; i++) {
             let attr = schema[i].key;
@@ -97,10 +104,13 @@ function onInitActivity(payload) {
 
             let option = document.createElement('option');
             option.id = attr;
+            // 只保留原始key，不加花括号
             option.value = attr;
             option.text = label;
             entry_fields_select.appendChild(option);
         }
+        console.log('###### entry_fields_select:', entry_fields_select);
+        console.log('###### schema:', schema);
     });
 
 }
@@ -121,18 +131,19 @@ function onDoneButtonClick() {
     // 获取 entry_fields_select 下拉框的选中项
     const entry_fields_select = document.getElementById('entryField');
     const entry_fields_option = entry_fields_select.options[entry_fields_select.selectedIndex];
-    const idKey = entry_fields_option ? entry_fields_option.value : null;
+    // 这里 optionKey 只会是原始key，不包含花括号
+    const optionKey = entry_fields_option ? entry_fields_option.value : null;
 
     // 构建inArguments
     const inArgs = [];
     if (option) {
         inArgs.push({ discount: option.value });
     }
-    if (idKey) {
-        // 转为{{key}}格式
-        const idArg = {};
-        idArg[idKey.substring(idKey.lastIndexOf('.') + 1)] = `{{${idKey}}}`;
-        inArgs.push(idArg);
+    if (optionKey) {
+        // 在这里才加花括号
+        const keyArg = {};
+        keyArg[optionKey.substring(optionKey.lastIndexOf('.') + 1)] = `{{${optionKey}}}`;
+        inArgs.push(keyArg);
     }
 
     activity.arguments.execute.inArguments = inArgs;
